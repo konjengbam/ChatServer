@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Login</title>
+</head>
+<body>
+    <h1>Chat Login</h1>
+    <form onsubmit="connect(); return false;">
+        <label for="username-input">Username:</label>
+        <input type="text" id="username-input" required>
+        <button type="submit">Connect</button>
+    </form>
+    <textarea id="chat-messages" readonly></textarea>
+    <form onsubmit="sendMessage(); return false;">
+        <input type="text" id="message-input" placeholder="Enter message here">
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        var websocket;
+
+        function connect() {
+            var username = document.getElementById("username-input").value;
+            var wsUri = "ws://127.0.0.1:8080/ws?name=" + encodeURIComponent(username);
+            websocket = new WebSocket(wsUri);
+
+            websocket.onopen = function (evt) {
+                console.log("Connected to chat server");
+                chatMessages.value += "you are now connected\n";
+            };
+
+            websocket.onclose = function (evt) {
+                console.log("Disconnected from chat server");
+                chatMessages.value += "you are now disconnected\n";
+            };
+
+            websocket.onmessage = function (evt) {
+                var chatMessages = document.getElementById("chat-messages");
+                chatMessages.value += evt.data + "\n";
+            };
+
+            websocket.onerror = function (evt) {
+                console.log("Error: " + evt.data);
+            };
+        }
+
+        function sendMessage() {
+            var messageInput = document.getElementById("message-input");
+            var message = messageInput.value;
+            websocket.send(message);
+            messageInput.value = "";
+
+            var chatMessages = document.getElementById("chat-messages");
+            chatMessages.value += "you:" + message + "\n";
+
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "ChatServer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    },
+    "WSL": {
+      "commandName": "Project",
+      "distributionName": ""
+    }
+  }
+}
